@@ -7,6 +7,8 @@ import type GroupInterface from '@/types/GroupInterface';
 import Header from '@/components/layout/Header/Header';
 import Footer from '@/components/layout/Footer/Footer';
 import Main from '@/components/layout/Main/Main';
+import type StudentInterface from '@/types/StudentsInterface';
+import { getStudentsApi } from '@/api/studentsApi';
 
 import type { Metadata } from 'next';
 
@@ -19,6 +21,7 @@ export const metadata: Metadata = {
 
 const RootLayout = async ({ children }: Readonly<{ children: React.ReactNode }>): Promise<React.ReactElement> => {
   let groups: GroupInterface[];
+  let students: StudentInterface[];
 
   // выполняется на сервере - загрузка групп
   await queryClient.prefetchQuery({
@@ -27,6 +30,17 @@ const RootLayout = async ({ children }: Readonly<{ children: React.ReactNode }>)
       groups = await getGroupsApi();
       console.log('Groups', groups);
       return groups;
+    },
+  });
+
+
+  // выполняется на сервере - загрузка групп
+  await queryClient.prefetchQuery({
+    queryKey: ['students'],
+    queryFn: async () => {
+      students = await getStudentsApi();
+      console.log('Students', students);
+      return students;
     },
   });
 
